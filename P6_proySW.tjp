@@ -112,19 +112,17 @@ task WMGame "Web & Mobile Game" {
     # It is necessary to “purge” the “chargeset” because it has been assigned previously to other variable
     purge chargeset
     chargeset back
-    responsible dev4
-    resources dev4, dev5
+    responsible dev1
     depends WMGame.tgdesign
     task tBEd "Back End General Design" {
       # The effort to finish this task is 5 man-days.
       effort 5d
-      allocate dev4, dev5
+      allocate dev1
     }
-
     task tlogic "Game logic" {
       effort 12d
       actual:effort 11d
-      allocate dev4, dev5
+      allocate dev1, dev2
       depends WMGame.tback.tBEd
       journalentry 2023-03-28 "Game logic completed before deadline" {
         author boss
@@ -142,12 +140,12 @@ task WMGame "Web & Mobile Game" {
   task twebF "Web Front End" {
     purge chargeset
     chargeset wFront
-    responsible dev3
+    responsible dev1
     depends WMGame.tback.tBEd
     task tGUId "Web GUI Design" {
       effort 9d
       actual:effort 15d
-      allocate dev3
+      allocate dev1, dev2
       journalentry 2023-04-11 "Problems with the GUI design tool" {
         author dev3
         alert yellow
@@ -155,13 +153,13 @@ task WMGame "Web & Mobile Game" {
       }
     }
     task tFEc "Web Front End Construction" {
-      effort 15d
+      effort 20d
       allocate dev2, dev3
       depends WMGame.twebF.tGUId
     }
     task tFEt "Web Front End Test" {
-      effort 6d
-      allocate dev1
+      effort 8d
+      allocate dev2
       depends WMGame.twebF.tFEc
     }
   }
@@ -192,14 +190,28 @@ task WMGame "Web & Mobile Game" {
     }
   }
 
+  task tBEcl "Back End Cloud" {
+    purge chargeset
+    chargeset back
+    responsible dev3
+    depends WMGame.tback
+    task tBEst "Evaluación y Decisión de la nube" {
+      effort 2d
+      allocate dev3
+    }
+    task tBEde "Back End Cloud Deployment" {
+      effort 3d
+      allocate dev4
+      depends WMGame.tBEcl.tBEst
+    }
   }
 
   task ttest "Accpetance tests" {
+      start 2023-06-01
       effort 10d
       allocate boss
       allocate dev2
       actual:effort 15d
-      targetstart 2023-06-01
       journalentry 2023-04-13 "Problems with the planned dates" {
         author boss
         alert red
@@ -207,7 +219,10 @@ task WMGame "Web & Mobile Game" {
       }
       depends WMGame.twebF
       depends WMGame.tback
+      depends WMGame.tandF
   }
+
+
 
 
   task deliveries "Milestones" {
@@ -277,6 +292,11 @@ textreport frame "" {
     center '<[report id="overview"]>'
   }
 
+    textreport overvi2 "Overview2" {
+    formats html
+    center '<[report id="informe"]>'
+  }
+
   textreport "Status" {
     formats html
     center -8<-
@@ -307,10 +327,26 @@ textreport frame "" {
   }
 }
 
-# A traditional Gantt chart with a project overview.
+# A traditional Gantt chart with a project start overview.
 taskreport overview "" {
   scenarios actual
   headline "Current Project Plan"
+  columns bsi { title 'WBS' },
+          name, start, end, effort, cost,
+          revenue, chart { ${TaskTip} }
+  # For this report we like to have the abbreviated weekday in front
+  # of the date. %a is the tag for this.
+  timeformat "%a %Y-%m-%d"
+  loadunit days
+  hideresource @all
+  balance cost rev
+  caption 'All effort values are in man days.'
+}
+
+# A traditional Gantt chart with a project overview.
+taskreport informe "" {
+  scenarios plan
+  headline "Informe Project Plan"
   columns bsi { title 'WBS' },
           name, start, end, effort, cost,
           revenue, chart { ${TaskTip} }
