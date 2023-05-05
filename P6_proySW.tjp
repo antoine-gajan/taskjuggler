@@ -19,7 +19,7 @@ project pSix "Web Game"  2023-03-15 +5m {
   # the project reports. If not specified, the current day will be
   # used, but this will likely be outside of the project range, so it
   # can't be seen in the reports.
-  now 2023-04-15-13:00
+  now 2023-05-05-12:00
   # The currency for all money values is the US Dollar.
   currency "EUR"
 
@@ -54,29 +54,35 @@ balance cost rev
 
 resource boss "Luna ́Alvarez" {
   email "815976@unizar.es"
+  workinghours mon-sun 09:00 - 13:00
   rate 160
 }
 resource dev1 "Pilar Fierro" {
   email "819658@unizar.es"
+  workinghours mon-sun 09:00 - 13:00
   rate 100
 }
 resource dev2 "Antoine Gajan" {
   email "894825@unizar.es"
   actual:leaves project 2023-05-06 - 2023-05-10
+  workinghours mon-sun 09:00 - 13:00
   rate 100
 }
 resource dev3 "Lucıa Beltran" {
   email "816117@unizar.es"
+  workinghours mon-sun 09:00 - 13:00
   rate 100
 }
 
 resource dev4 "Daniel Carrizo" {
   email "821674@unizar.es"
+  workinghours mon-sun 09:00 - 13:00
   rate 100
 }
 
 resource dev5 "Martina Gracia" {
   email "795809@unizar.es"
+  workinghours mon-sun 09:00 - 13:00
   rate 100
 }
 
@@ -156,6 +162,7 @@ task WMGame "Web & Mobile Game" {
       effort 20d
       allocate dev1, dev2
       depends WMGame.twebF.tGUId
+      note "Incidencia en la tarea el 5 de mayo de 2023"
     }
     task tFEt "Web Front End Test" {
       effort 8d
@@ -195,12 +202,12 @@ task WMGame "Web & Mobile Game" {
     chargeset back
     responsible dev4
     depends WMGame.tback
-    task tBEst "Back End Cloud Decision" {
+    task tBEst "Configuration of ports" {
       effort 3d
       allocate dev4, dev5
     }
 
-    task tBEde "Back End Cloud Deployment With Docker" {
+    task tBEde "Docker Configuration" {
       effort 10d
       allocate dev4, dev5
       depends WMGame.tBEcl.tBEst
@@ -441,4 +448,17 @@ resourcereport resourceGraph "" {
   # We only like to show leaf tasks for leaf resources.
   hidetask ~(isleaf() & isleaf_())
   sorttasks plan.start.up
+}
+
+taskreport initialplan "" {
+  scenarios plan
+  headline "Initial Project Plan"
+  columns bsi { title 'WBS' },
+          name, start, end, effort, cost,
+          revenue, chart { ${TaskTip} }
+  timeformat "%a %Y-%m-%d"
+  loadunit days
+  hideresource @all
+  balance cost rev
+  caption 'All effort values are in man days.'
 }
