@@ -5,7 +5,7 @@
  * some elements of it
  */
 
-project pSix "Web Game"  2023-03-15 +2.5m {
+project pSix "Web Game"  2023-03-15 +5m {
   # Set the default time zone for the project. If not specified, UTC
   # is used.
   timezone "Europe/Paris"
@@ -112,17 +112,17 @@ task WMGame "Web & Mobile Game" {
     # It is necessary to “purge” the “chargeset” because it has been assigned previously to other variable
     purge chargeset
     chargeset back
-    responsible dev1
+    responsible dev4
     depends WMGame.tgdesign
     task tBEd "Back End General Design" {
       # The effort to finish this task is 5 man-days.
-      effort 5d
-      allocate dev1
+      effort 7d
+      allocate dev4
     }
     task tlogic "Game logic" {
-      effort 12d
+      effort 20d
       actual:effort 11d
-      allocate dev1, dev2
+      allocate dev4, dev5
       depends WMGame.tback.tBEd
       journalentry 2023-03-28 "Game logic completed before deadline" {
         author boss
@@ -131,8 +131,8 @@ task WMGame "Web & Mobile Game" {
       }
     }
     task tbackDev "Back development" {
-      effort 20d
-      allocate dev1, dev2
+      effort 30d
+      allocate dev4, dev5
       depends WMGame.tback.tlogic
     }
   }
@@ -147,14 +147,14 @@ task WMGame "Web & Mobile Game" {
       actual:effort 15d
       allocate dev1, dev2
       journalentry 2023-04-11 "Problems with the GUI design tool" {
-        author dev3
+        author dev1
         alert yellow
         summary "The tool used for the GUI design has given me a lot of problems. I recommend to look for other one."
       }
     }
     task tFEc "Web Front End Construction" {
       effort 20d
-      allocate dev2, dev3
+      allocate dev1, dev2
       depends WMGame.twebF.tGUId
     }
     task tFEt "Web Front End Test" {
@@ -167,25 +167,25 @@ task WMGame "Web & Mobile Game" {
   task tandF "Android Front End" {
     purge chargeset
     chargeset wFront
-    responsible dev4
+    responsible dev3
     depends WMGame.tback.tBEd
     task tGUIa "Android GUI Design" {
       effort 7d
-      allocate dev4
+      allocate dev3
       journalentry 2023-05-03 "Problema al exportar el diseño" {
-        author dev4
+        author dev3
         alert yellow
         summary "El diseño no se exporta correctamente. Por el momento se necesita que todos los miembros instalen la herramienta."
       }
     }
     task tFEa "Android Front End Construction" {
-      effort 15d
-      allocate dev4, dev1
+      effort 30d
+      allocate dev3
       depends WMGame.tandF.tGUIa
     }
     task tFEat "Android Front End Test" {
-      effort 6d
-      allocate dev4
+      effort 8d
+      allocate dev3
       depends WMGame.tandF.tFEa
     }
   }
@@ -193,15 +193,16 @@ task WMGame "Web & Mobile Game" {
   task tBEcl "Back End Cloud" {
     purge chargeset
     chargeset back
-    responsible dev3
+    responsible dev4
     depends WMGame.tback
-    task tBEst "Evaluación y Decisión de la nube" {
-      effort 2d
-      allocate dev3
-    }
-    task tBEde "Back End Cloud Deployment" {
+    task tBEst "Back End Cloud Decision" {
       effort 3d
-      allocate dev4
+      allocate dev4, dev5
+    }
+
+    task tBEde "Back End Cloud Deployment With Docker" {
+      effort 10d
+      allocate dev4, dev5
       depends WMGame.tBEcl.tBEst
     }
   }
@@ -215,7 +216,7 @@ task WMGame "Web & Mobile Game" {
       journalentry 2023-04-13 "Problems with the planned dates" {
         author boss
         alert red
-        summary "The whole team asiigned to this task has a trip to visit a new client from May 7th to May 12th. Needed to check if the project can be finished on time or it is necessary to reasign efforts."
+        summary "The whole team assigned to this task has a trip to visit a new client from May 7th to May 12th. Needed to check if the project can be finished on time or it is necessary to reasign efforts."
       }
       depends WMGame.twebF
       depends WMGame.tback
