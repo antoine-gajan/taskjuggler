@@ -186,12 +186,12 @@ task WMGame "Web & Mobile Game" {
       }
     }
     task tFEa "Android Front End Construction" {
-      effort 30d
+      effort 15d
       allocate dev3
       depends WMGame.tandF.tGUIa
     }
     task tFEat "Android Front End Test" {
-      effort 8d
+      effort 5d
       allocate dev3
       depends WMGame.tandF.tFEa
     }
